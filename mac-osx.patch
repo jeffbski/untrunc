@@ -1,0 +1,165 @@
+commit 02152f4c3f1e53e41c1818ff7959f213a946897e
+Author: David Champion <dgc@bikeshed.us>
+Date:   Thu Sep 22 23:48:16 2016 -0700
+
+    various ad hoc hacks to make untrunc compile on MacOS
+
+diff --git a/Makefile b/Makefile
+index 1da9ea0..2560576 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,10 +13,12 @@ CXX           = g++
+ DEFINES       = -DQT_WEBKIT -DQT_NO_DEBUG
+ CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES)
+ CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES)
+-INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4 -I-I../libav-0.8.7/libavformat -I-I../libav-0.8.7/libavcodec -I-I../libav-0.8.7/libavutil -I.
++#INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4 -I-I../libav-0.8.7/libavformat -I-I../libav-0.8.7/libavcodec -I-I../libav-0.8.7/libavutil -I.
++INCPATH       = -I/sw/include 
+ LINK          = g++
+-LFLAGS        = -m64 -Wl,-O1
+-LIBS          = $(SUBLIBS)  -L/usr/lib/x86_64-linux-gnu ../libav-0.8.7/libavformat/libavformat.a ../libav-0.8.7/libavcodec/libavcodec.a ../libav-0.8.7/libavutil/libavutil.a -lz -lpthread 
++LFLAGS        = #-m64
++#LIBS          = $(SUBLIBS)  -L/usr/lib/x86_64-linux-gnu ../libav-0.8.7/libavformat/libavformat.a ../libav-0.8.7/libavcodec/libavcodec.a ../libav-0.8.7/libavutil/libavutil.a -lz -lpthread 
++LIBS          = $(SUBLIBS) -L/sw/lib -lavformat -lavcodec -lavresample -lavdevice -lavutil -lbz2 -lz -lpthread
+ AR            = ar cqs
+ RANLIB        = 
+ QMAKE         = /usr/bin/qmake
+@@ -110,60 +112,6 @@ all: Makefile $(TARGET)
+ $(TARGET):  $(OBJECTS)  
+ 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
+ 
+-Makefile: untrunc.pro  /usr/share/qt4/mkspecs/linux-g++-64/qmake.conf /usr/share/qt4/mkspecs/common/unix.conf \
+-		/usr/share/qt4/mkspecs/common/linux.conf \
+-		/usr/share/qt4/mkspecs/common/gcc-base.conf \
+-		/usr/share/qt4/mkspecs/common/gcc-base-unix.conf \
+-		/usr/share/qt4/mkspecs/common/g++-base.conf \
+-		/usr/share/qt4/mkspecs/common/g++-unix.conf \
+-		/usr/share/qt4/mkspecs/qconfig.pri \
+-		/usr/share/qt4/mkspecs/modules/qt_phonon.pri \
+-		/usr/share/qt4/mkspecs/modules/qt_webkit_version.pri \
+-		/usr/share/qt4/mkspecs/features/qt_functions.prf \
+-		/usr/share/qt4/mkspecs/features/qt_config.prf \
+-		/usr/share/qt4/mkspecs/features/exclusive_builds.prf \
+-		/usr/share/qt4/mkspecs/features/default_pre.prf \
+-		/usr/share/qt4/mkspecs/features/release.prf \
+-		/usr/share/qt4/mkspecs/features/default_post.prf \
+-		/usr/share/qt4/mkspecs/features/unix/gdb_dwarf_index.prf \
+-		/usr/share/qt4/mkspecs/features/warn_on.prf \
+-		/usr/share/qt4/mkspecs/features/qt.prf \
+-		/usr/share/qt4/mkspecs/features/unix/thread.prf \
+-		/usr/share/qt4/mkspecs/features/moc.prf \
+-		/usr/share/qt4/mkspecs/features/resources.prf \
+-		/usr/share/qt4/mkspecs/features/uic.prf \
+-		/usr/share/qt4/mkspecs/features/yacc.prf \
+-		/usr/share/qt4/mkspecs/features/lex.prf \
+-		/usr/share/qt4/mkspecs/features/include_source_dir.prf
+-	$(QMAKE) -o Makefile untrunc.pro
+-/usr/share/qt4/mkspecs/common/unix.conf:
+-/usr/share/qt4/mkspecs/common/linux.conf:
+-/usr/share/qt4/mkspecs/common/gcc-base.conf:
+-/usr/share/qt4/mkspecs/common/gcc-base-unix.conf:
+-/usr/share/qt4/mkspecs/common/g++-base.conf:
+-/usr/share/qt4/mkspecs/common/g++-unix.conf:
+-/usr/share/qt4/mkspecs/qconfig.pri:
+-/usr/share/qt4/mkspecs/modules/qt_phonon.pri:
+-/usr/share/qt4/mkspecs/modules/qt_webkit_version.pri:
+-/usr/share/qt4/mkspecs/features/qt_functions.prf:
+-/usr/share/qt4/mkspecs/features/qt_config.prf:
+-/usr/share/qt4/mkspecs/features/exclusive_builds.prf:
+-/usr/share/qt4/mkspecs/features/default_pre.prf:
+-/usr/share/qt4/mkspecs/features/release.prf:
+-/usr/share/qt4/mkspecs/features/default_post.prf:
+-/usr/share/qt4/mkspecs/features/unix/gdb_dwarf_index.prf:
+-/usr/share/qt4/mkspecs/features/warn_on.prf:
+-/usr/share/qt4/mkspecs/features/qt.prf:
+-/usr/share/qt4/mkspecs/features/unix/thread.prf:
+-/usr/share/qt4/mkspecs/features/moc.prf:
+-/usr/share/qt4/mkspecs/features/resources.prf:
+-/usr/share/qt4/mkspecs/features/uic.prf:
+-/usr/share/qt4/mkspecs/features/yacc.prf:
+-/usr/share/qt4/mkspecs/features/lex.prf:
+-/usr/share/qt4/mkspecs/features/include_source_dir.prf:
+-qmake:  FORCE
+-	@$(QMAKE) -o Makefile untrunc.pro
+-
+ dist: 
+ 	@$(CHK_DIR_EXISTS) .tmp/untrunc1.0.0 || $(MKDIR) .tmp/untrunc1.0.0 
+ 	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/untrunc1.0.0/ && $(COPY_FILE) --parents atom.h mp4.h file.h track.h .tmp/untrunc1.0.0/ && $(COPY_FILE) --parents main.cpp atom.cpp mp4.cpp file.cpp track.cpp .tmp/untrunc1.0.0/ && (cd `dirname .tmp/untrunc1.0.0` && $(TAR) untrunc1.0.0.tar untrunc1.0.0 && $(COMPRESS) untrunc1.0.0.tar) && $(MOVE) `dirname .tmp/untrunc1.0.0`/untrunc1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/untrunc1.0.0
+diff --git a/atom.cpp b/atom.cpp
+index 49acb05..54a5587 100644
+--- a/atom.cpp
++++ b/atom.cpp
+@@ -7,7 +7,7 @@
+ #include <iostream>
+ 
+ #include <assert.h>
+-#include <endian.h>
++#include "endian.h"
+ 
+ using namespace std;
+ 
+diff --git a/endian.h b/endian.h
+new file mode 100644
+index 0000000..06a0663
+--- /dev/null
++++ b/endian.h
+@@ -0,0 +1,33 @@
++#ifndef __FINK_ENDIANDEV_PKG_ENDIAN_H__
++#define __FINK_ENDIANDEV_PKG_ENDIAN_H__ 1
++
++/** compatibility header for endian.h
++ * This is a simple compatibility shim to convert
++ * BSD/Linux endian macros to the Mac OS X equivalents.
++ * It is public domain.
++ * */
++
++#ifndef __APPLE__
++	#warning "This header file (endian.h) is MacOS X specific.\n"
++#endif	/* __APPLE__ */
++
++
++#include <libkern/OSByteOrder.h>
++
++#define htobe16(x) OSSwapHostToBigInt16(x)
++#define htole16(x) OSSwapHostToLittleInt16(x)
++#define be16toh(x) OSSwapBigToHostInt16(x)
++#define le16toh(x) OSSwapLittleToHostInt16(x)
++
++#define htobe32(x) OSSwapHostToBigInt32(x)
++#define htole32(x) OSSwapHostToLittleInt32(x)
++#define be32toh(x) OSSwapBigToHostInt32(x)
++#define le32toh(x) OSSwapLittleToHostInt32(x)
++
++#define htobe64(x) OSSwapHostToBigInt64(x)
++#define htole64(x) OSSwapHostToLittleInt64(x)
++#define be64toh(x) OSSwapBigToHostInt64(x)
++#define le64toh(x) OSSwapLittleToHostInt64(x)
++
++
++#endif	/* __FINK_ENDIANDEV_PKG_ENDIAN_H__ */
+diff --git a/file.cpp b/file.cpp
+index da9d3c1..461367c 100644
+--- a/file.cpp
++++ b/file.cpp
+@@ -20,7 +20,7 @@
+ 
+ #include "file.h"
+ #include <string>
+-#include <endian.h>
++#include "endian.h"
+ 
+ using namespace std;
+ 
+diff --git a/track.cpp b/track.cpp
+index 041c7e9..afb5e09 100644
+--- a/track.cpp
++++ b/track.cpp
+@@ -25,7 +25,7 @@
+ #include <vector>
+ #include <string.h>
+ #include <assert.h>
+-#include <endian.h>
++#include "endian.h"
+ 
+ #define __STDC_LIMIT_MACROS 1
+ #define __STDC_CONSTANT_MACROS 1

@@ -9,6 +9,16 @@ You need:
 * [libav](https://libav.org/)
 * Basic ability to use a command line
 
+## Installing on Mac OS X
+
+ - brew install ffmpeg libav
+ - clone or download untrunc repo
+ - patch < mac-osx.patch
+ - g++ -o untrunc file.cpp main.cpp track.cpp atom.cpp mp4.cpp -L/usr/local/lib -lavformat -lavcodec -lavutil
+
+A binary called untrunc is created in the same directory.
+
+
 ## Installing on Ubuntu
 
 If you have an old Ubuntu version or other operational system, you might need to manually install a recent libav version, go to the bottom of the page for instructions.
@@ -37,7 +47,7 @@ Compile the source code using this command (all one line):
 ## Installing on other operating system (Manual libav installation)
 
 Download the source code from GitHub at https://github.com/ponchio/untrunc and unzip the source code.
-    
+
 Download [libav, 0.8.7 version](http://libav.org/releases/libav-0.8.7.tar.xz) from [libav download page](http://libav.org/download.html) and unzip into the untrunc source code library. Then:
 
     cd untrunc-master

@@ -13,10 +13,12 @@ CXX           = g++
 DEFINES       = -DQT_WEBKIT -DQT_NO_DEBUG
 CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES)
 CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES)
-INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4 -I-I../libav-0.8.7/libavformat -I-I../libav-0.8.7/libavcodec -I-I../libav-0.8.7/libavutil -I.
+#INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4 -I-I../libav-0.8.7/libavformat -I-I../libav-0.8.7/libavcodec -I-I../libav-0.8.7/libavutil -I.
+INCPATH       = -I/sw/include 
 LINK          = g++
-LFLAGS        = -m64 -Wl,-O1
-LIBS          = $(SUBLIBS)  -L/usr/lib/x86_64-linux-gnu ../libav-0.8.7/libavformat/libavformat.a ../libav-0.8.7/libavcodec/libavcodec.a ../libav-0.8.7/libavutil/libavutil.a -lz -lpthread 
+LFLAGS        = #-m64
+#LIBS          = $(SUBLIBS)  -L/usr/lib/x86_64-linux-gnu ../libav-0.8.7/libavformat/libavformat.a ../libav-0.8.7/libavcodec/libavcodec.a ../libav-0.8.7/libavutil/libavutil.a -lz -lpthread 
+LIBS          = $(SUBLIBS) -L/sw/lib -lavformat -lavcodec -lavresample -lavdevice -lavutil -lbz2 -lz -lpthread
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/bin/qmake
@@ -109,60 +111,6 @@ all: Makefile $(TARGET)
 
 $(TARGET):  $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
-
-Makefile: untrunc.pro  /usr/share/qt4/mkspecs/linux-g++-64/qmake.conf /usr/share/qt4/mkspecs/common/unix.conf \
-		/usr/share/qt4/mkspecs/common/linux.conf \
-		/usr/share/qt4/mkspecs/common/gcc-base.conf \
-		/usr/share/qt4/mkspecs/common/gcc-base-unix.conf \
-		/usr/share/qt4/mkspecs/common/g++-base.conf \
-		/usr/share/qt4/mkspecs/common/g++-unix.conf \
-		/usr/share/qt4/mkspecs/qconfig.pri \
-		/usr/share/qt4/mkspecs/modules/qt_phonon.pri \
-		/usr/share/qt4/mkspecs/modules/qt_webkit_version.pri \
-		/usr/share/qt4/mkspecs/features/qt_functions.prf \
-		/usr/share/qt4/mkspecs/features/qt_config.prf \
-		/usr/share/qt4/mkspecs/features/exclusive_builds.prf \
-		/usr/share/qt4/mkspecs/features/default_pre.prf \
-		/usr/share/qt4/mkspecs/features/release.prf \
-		/usr/share/qt4/mkspecs/features/default_post.prf \
-		/usr/share/qt4/mkspecs/features/unix/gdb_dwarf_index.prf \
-		/usr/share/qt4/mkspecs/features/warn_on.prf \
-		/usr/share/qt4/mkspecs/features/qt.prf \
-		/usr/share/qt4/mkspecs/features/unix/thread.prf \
-		/usr/share/qt4/mkspecs/features/moc.prf \
-		/usr/share/qt4/mkspecs/features/resources.prf \
-		/usr/share/qt4/mkspecs/features/uic.prf \
-		/usr/share/qt4/mkspecs/features/yacc.prf \
-		/usr/share/qt4/mkspecs/features/lex.prf \
-		/usr/share/qt4/mkspecs/features/include_source_dir.prf
-	$(QMAKE) -o Makefile untrunc.pro
-/usr/share/qt4/mkspecs/common/unix.conf:
-/usr/share/qt4/mkspecs/common/linux.conf:
-/usr/share/qt4/mkspecs/common/gcc-base.conf:
-/usr/share/qt4/mkspecs/common/gcc-base-unix.conf:
-/usr/share/qt4/mkspecs/common/g++-base.conf:
-/usr/share/qt4/mkspecs/common/g++-unix.conf:
-/usr/share/qt4/mkspecs/qconfig.pri:
-/usr/share/qt4/mkspecs/modules/qt_phonon.pri:
-/usr/share/qt4/mkspecs/modules/qt_webkit_version.pri:
-/usr/share/qt4/mkspecs/features/qt_functions.prf:
-/usr/share/qt4/mkspecs/features/qt_config.prf:
-/usr/share/qt4/mkspecs/features/exclusive_builds.prf:
-/usr/share/qt4/mkspecs/features/default_pre.prf:
-/usr/share/qt4/mkspecs/features/release.prf:
-/usr/share/qt4/mkspecs/features/default_post.prf:
-/usr/share/qt4/mkspecs/features/unix/gdb_dwarf_index.prf:
-/usr/share/qt4/mkspecs/features/warn_on.prf:
-/usr/share/qt4/mkspecs/features/qt.prf:
-/usr/share/qt4/mkspecs/features/unix/thread.prf:
-/usr/share/qt4/mkspecs/features/moc.prf:
-/usr/share/qt4/mkspecs/features/resources.prf:
-/usr/share/qt4/mkspecs/features/uic.prf:
-/usr/share/qt4/mkspecs/features/yacc.prf:
-/usr/share/qt4/mkspecs/features/lex.prf:
-/usr/share/qt4/mkspecs/features/include_source_dir.prf:
-qmake:  FORCE
-	@$(QMAKE) -o Makefile untrunc.pro
 
 dist: 
 	@$(CHK_DIR_EXISTS) .tmp/untrunc1.0.0 || $(MKDIR) .tmp/untrunc1.0.0 
